@@ -43,5 +43,5 @@ if __name__ == "__main__":
     print(" Algorithm: Bcrypt (Industry Standard)")
     print("="*60)
     
-    # 4. Chạy server thực sự trên port 5001
+    # 4. Chạy server thực sự trên port 5000
     server.app.run(port=5000)
