@@ -1,0 +1,4 @@
+flask
+requests
+bcrypt
+#pip install -r requirements.txt
