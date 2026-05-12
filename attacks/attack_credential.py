@@ -10,7 +10,7 @@ if sys.stdout.encoding != 'utf-8':
 
 url = "http://localhost:5000/login"
 home_url = "http://localhost:5000"
-credential_file = "leaked_credentials.txt"
+credential_file = "data/leaked_credentials.txt"
 
 
 def print_banner(total_credentials):

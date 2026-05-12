@@ -12,7 +12,7 @@ if sys.stdout.encoding != 'utf-8':
 url = "http://localhost:5000/login"
 steal_otp_url = "http://localhost:5000/api/steal-otp"
 submit_otp_url = "http://localhost:5000/api/submit-otp"
-credential_file = "leaked_credentials.txt"
+credential_file = "data/leaked_credentials.txt"
 
 def print_banner():
     print("\n" + "╔" + "═" * 62 + "╗")

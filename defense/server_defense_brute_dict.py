@@ -1,5 +1,8 @@
 import time
 from flask import request
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'servers')))
 import server
 
 # Cấu hình phòng thủ

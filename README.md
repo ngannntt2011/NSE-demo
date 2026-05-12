@@ -45,32 +45,29 @@ pip install -r requirements.txt
 
 ## 🚀 Hướng dẫn chạy Demo
 
+**Lưu ý:** Tất cả các lệnh dưới đây nên được chạy từ **thư mục gốc** (`NSE-demo/`).
+
 Mỗi kịch bản yêu cầu chạy **1 Server** (để mô phỏng mục tiêu) và **1 Attack Script** (để thực hiện tấn công).
 
 ### Giai đoạn 1: Brute Force (Vét cạn)
-*   **Mở Terminal 1 (Server):** `python server_bruteforce.py`
-*   **Mở Terminal 2 (Attack):** `python attack_bruteforce.py`
-*   *Mục tiêu:* Tìm ra mật khẩu ngắn bằng cách thử mọi tổ hợp ký tự.
+*   **Server:** `python servers/server_bruteforce.py`
+*   **Attack:** `python attacks/attack_bruteforce.py`
 
 ### Giai đoạn 2: Rainbow Table (Bảng cầu vồng)
-*   **Mở Terminal 1 (Server):** `python server.py`
-*   **Mở Terminal 2 (Attack):** `python rainbow_attack.py`
-*   *Mục tiêu:* Bẻ khóa mã băm (hash) MD5 không có muối (salt).
+*   **Server:** `python servers/server.py`
+*   **Attack:** `python attacks/rainbow_attack.py`
 
 ### Giai đoạn 3: Dictionary Attack (Tấn công từ điển)
-*   **Mở Terminal 1 (Server):** `python server.py`
-*   **Mở Terminal 2 (Attack):** `python attack_dictionary.py`
-*   *Mục tiêu:* Thử các mật khẩu phổ biến từ tệp `wordlist.txt`.
+*   **Server:** `python servers/server.py`
+*   **Attack:** `python attacks/attack_dictionary.py`
 
 ### Giai đoạn 4: Credential Stuffing (Nhồi thông tin)
-*   **Mở Terminal 1 (Server):** `python server.py`
-*   **Mở Terminal 2 (Attack):** `python attack_credential.py`
-*   *Mục tiêu:* Sử dụng dữ liệu rò rỉ từ `leaked_credentials.txt` để đăng nhập vào hệ thống khác.
+*   **Server:** `python servers/server.py`
+*   **Attack:** `python attacks/attack_credential.py`
 
 ### Giai đoạn 5: Advanced Chain Attack (Tấn công chuỗi + Bypass MFA)
-*   **Mở Terminal 1 (Server):** `python server_chain_mfa_bypass.py`
-*   **Mở Terminal 2 (Attack):** `python attack_chain_mfa_bypass.py`
-*   *Mục tiêu:* Kết hợp nhồi thông tin và đánh cắp OTP thông qua lỗ hổng API để chiếm quyền điều khiển tài khoản.
+*   **Server:** `python servers/server_chain_mfa_bypass.py`
+*   **Attack:** `python attacks/attack_chain_mfa_bypass.py`
 
 ---
 
@@ -78,19 +75,18 @@ Mỗi kịch bản yêu cầu chạy **1 Server** (để mô phỏng mục tiêu
 
 Sau khi demo tấn công, bạn có thể chạy các server đã được cấu hình phòng thủ để thấy sự khác biệt:
 
-1.  **Phòng thủ Brute Force:** `python server_defense_brute_dict.py` (Khóa tài khoản sau 5 lần sai).
-2.  **Phòng thủ Rainbow Table:** `python server_defense_rainbow.py` (Sử dụng Salting + Key Stretching).
-3.  **Phòng thủ MFA nâng cao:** `python server_defense_advanced_mfa.py` (Session Binding + IP Locking).
+1.  **Phòng thủ Brute Force:** `python defense/server_defense_brute_dict.py`
+2.  **Phòng thủ Rainbow Table:** `python defense/server_defense_rainbow.py`
+3.  **Phòng thủ MFA nâng cao:** `python defense/server_defense_advanced_mfa.py`
 
 ---
 
-## 📁 Cấu trúc thư mục chính
-*   `server.py`: Server đăng nhập cơ bản.
-*   `attack_*.py`: Các kịch bản tấn công.
-*   `server_defense_*.py`: Các kịch bản phòng thủ.
-*   `static/`: Chứa hình ảnh giao diện.
-*   `wordlist.txt`: Danh sách mật khẩu mẫu.
-*   `leaked_credentials.txt`: Dữ liệu rò rỉ giả định.
+## 📁 Cấu trúc thư mục dự án
+*   `servers/`: Chứa các máy chủ mô phỏng lỗ hổng.
+*   `attacks/`: Chứa các script thực hiện tấn công.
+*   `defense/`: Chứa các giải pháp phòng thủ nâng cao.
+*   `data/`: Chứa cơ sở dữ liệu mẫu (`wordlist`, `credentials`) và công cụ test hash.
+*   `static/`: Chứa tài nguyên giao diện (hình ảnh).
 
 ---
 ⚠️ **Cảnh báo:** Chỉ sử dụng mã nguồn này cho mục đích học tập. Việc tấn công các hệ thống khi chưa được phép là vi phạm pháp luật.

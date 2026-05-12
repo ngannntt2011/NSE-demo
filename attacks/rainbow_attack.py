@@ -11,7 +11,7 @@ if sys.stdout.encoding != 'utf-8':
 # Cấu hình mục tiêu
 target_hash = "f30aa7a662c728b7407c54ae6bfd27d1"  # MD5 của "hello123"
 username = "bob"  # User liên quan đến hash
-wordlist_file = "wordlist.txt"
+wordlist_file = "data/wordList.txt"
 
 def print_banner():
     print("\n" + "="*60)

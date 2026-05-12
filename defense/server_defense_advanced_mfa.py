@@ -2,6 +2,9 @@ import time
 import random
 import uuid
 from flask import request, jsonify
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'servers')))
 import server
 
 # Cấu hình Advanced MFA

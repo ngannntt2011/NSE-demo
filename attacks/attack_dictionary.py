@@ -11,7 +11,7 @@ if sys.stdout.encoding != 'utf-8':
 url = "http://localhost:5000/login"
 home_url = "http://localhost:5000"
 username = "alice"
-wordlist_file = "wordlist.txt"
+wordlist_file = "data/wordList.txt"
 
 def print_banner(total_passwords):
     print("\n" + "="*60)
