@@ -1,41 +1,47 @@
-import hashlib
-import time
+import bcrypt
 import sys
+import os
+from flask import request
 
 # Đảm bảo in được emoji trên Windows
 if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
 
-def demo_secure_hash():
-    password = "password123"
-    
-    # 1. MD5 thông thường (Hacker bẻ được dễ dàng)
-    insecure_hash = hashlib.md5(password.encode()).hexdigest()
-    
-    # 2. Secure Hash (MD5 + Salt + Multi-Iterations)
-    salt = "NSE_DEMO_2024_@#" # Chuỗi muối ngẫu nhiên
-    
-    # Băm 1000 lần (Key Stretching - Mô phỏng Bcrypt)
-    secure_hash = password
-    for _ in range(1000):
-        secure_hash = hashlib.md5((secure_hash + salt).encode()).hexdigest()
+# Thiết lập đường dẫn để import từ thư mục servers
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from servers import server
 
-    print("\n" + "="*60)
-    print(" 🛡️  DEFENSE 2: RAINBOW TABLE PROTECTION")
-    print("="*60)
-    print(f" Raw Password   : {password}")
-    print("-" * 60)
-    print(f" [❌] Insecure MD5 Hash : {insecure_hash}")
-    print("   -> Status: Vulnerable to Rainbow Table Attack")
-    print("-" * 60)
-    print(f" [✅] Secure Salted Hash : {secure_hash}")
-    print("   -> Status: IMMUNE to standard Rainbow Tables")
-    print("   -> Technique: Salting + Key Stretching (1000 rounds)")
-    print("=" * 60)
-    print("\n [i] Hướng dẫn demo: ")
-    print(" 1. Cho giáo viên thấy bảng Rainbow Table MD5 tìm được 'password123'.")
-    print(" 2. Show mã băm Secure và thách thức hacker dùng bảng cũ để tìm mật khẩu.")
-    print(" 3. Giải thích: Vì có 'Muối' ngẫu nhiên, mã băm này không tồn tại trên bất kỳ bảng tra cứu nào.")
+# 1. Cơ sở dữ liệu giả lập lưu mật khẩu đã băm bằng Bcrypt
+# Bcrypt tự động tạo Salt và lưu Salt đó ngay trong chuỗi Hash
+secure_db = {
+    "alice": bcrypt.hashpw("aa12".encode('utf-8'), bcrypt.gensalt())
+}
+
+def secure_login_bcrypt():
+    username = request.form.get("username", "")
+    password = request.form.get("password", "")
+    
+    if username in secure_db:
+        # 2. Kiểm tra mật khẩu bằng Bcrypt (bcrypt.checkpw)
+        # Nó sẽ tự tách Salt từ hash cũ ra để so sánh
+        success = bcrypt.checkpw(password.encode('utf-8'), secure_db[username])
+        
+        print(f" [🛡️] DEFENSE: Bcrypt verification for {username}")
+        print(f"     Stored Bcrypt Hash: {secure_db[username].decode()[:30]}...")
+        
+        return server.login_response(username, success)
+    
+    return server.login_response(username, False)
+
+# 3. Ghi đè logic đăng nhập
+server.app.view_functions['login'] = secure_login_bcrypt
 
 if __name__ == "__main__":
-    demo_secure_hash()
+    print("\n" + "="*60)
+    print(" 🛡️  DEFENSE 2: BCRYPT PASSWORD PROTECTION")
+    print(" Status: Running on http://localhost:5000")
+    print(" Algorithm: Bcrypt (Industry Standard)")
+    print("="*60)
+    
+    # 4. Chạy server thực sự trên port 5001
+    server.app.run(port=5000)

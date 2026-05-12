@@ -2,23 +2,25 @@ import time
 import hashlib
 import sys
 import webbrowser
+import bcrypt
 from tqdm import tqdm
 
 # Đảm bảo in được emoji trên Windows
 if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
 
-# Cấu hình mục tiêu
-target_hash = "f30aa7a662c728b7407c54ae6bfd27d1"  # MD5 của "hello123"
-username = "bob"  # User liên quan đến hash
+# Cấu hình mục tiêu MỚI (Nhắm vào Alice và mã băm Bcrypt)
+# Đây là mã băm Bcrypt, không phải MD5
+target_hash = "$2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/zBJa9A0NQi/hYjW.u.7q.Z.GKi" 
+username = "alice"
 wordlist_file = "data/wordList.txt"
 
 def print_banner():
     print("\n" + "="*60)
-    print(" 🌈 PHASE 2: RAINBOW TABLE ATTACK ")
+    print(" 🌈 PHASE 2: RAINBOW TABLE ATTACK (Updated for Bcrypt)")
     print("="*60)
-    print(f" Target Hash : {target_hash}")
-    print(f" Algorithm   : MD5 (Vulnerable)")
+    print(f" Target Hash : {target_hash[:30]}...")
+    print(f" Algorithm   : Bcrypt (High Security)")
     print("-" * 60)
 
 def main():
@@ -29,9 +31,8 @@ def main():
     try:
         with open(wordlist_file, "r", encoding="utf-8") as f:
             passwords = [line.strip() for line in f if line.strip()]
-            if "hello123" not in passwords: passwords.append("hello123")
     except:
-        print("[!] Error: wordlist.txt not found.")
+        print("[!] Error: data/wordList.txt not found.")
         return
 
     total_passwords = len(passwords)
@@ -40,38 +41,33 @@ def main():
 
     for password in passwords:
         attempts += 1
+        # Kẻ tấn công vẫn dùng MD5 để thử (vì chúng tưởng server dùng MD5)
         hashed_word = hashlib.md5(password.encode()).hexdigest()
         
-        tqdm.write(f" Trying #{attempts}/{total_passwords}: {hashed_word} == {target_hash}")
-        time.sleep(0.05) # Delay nhẹ để demo nhìn thấy
+        tqdm.write(f" Comparing: MD5({password}) -> {hashed_word} vs Bcrypt Target")
+        time.sleep(0.05)
 
+        # So sánh MD5 với Bcrypt -> Chắc chắn không bao giờ khớp
         if hashed_word == target_hash:
             found_password = password
-            # Đẩy thanh progress lên 100%
-            remaining = total_passwords - pbar.n
-            if remaining > 0:
-                pbar.update(remaining)
             pbar.close()
-            print(f"\n [✅] HASH CRACKED! Match found: '{password}'")
             break
             
         pbar.update(1)
     pbar.close()
 
+    total_time = time.time() - start_time
+    print("\n" + "="*60)
+    print(" RAINBOW TABLE ATTACK RESULT")
+    
     if found_password:
-        total_time = time.time() - start_time
-        print("\n" + "="*60)
-        print(" RAINBOW TABLE ATTACK RESULT")
         print(f" Hash Status  : CRACKED")
-        print(f" Time taken   : {total_time:.2f}s")
         print(f" Password     : {found_password}")
-        print("-" * 60)
-        print(" [!] Opening web portal...")
-        print(" [i] Password auto-filled. Please click 'Login' to verify.")
-        time.sleep(1.5)
-        webbrowser.open(f"http://localhost:5000/?username={username}&password={found_password}")
     else:
-        print("\n [❌] FAILED: Hash not found in Rainbow Table.")
+        print(f" Hash Status  : ❌ FAILED (Defense is too strong)")
+        print(f" Reason       : Bcrypt hashes cannot be cracked with MD5 Rainbow Tables.")
+        print(f" Time taken   : {total_time:.2f}s")
+    
     print("="*60 + "\n")
 
 if __name__ == "__main__":
