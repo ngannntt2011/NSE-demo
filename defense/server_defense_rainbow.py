@@ -1,5 +1,10 @@
 import hashlib
 import time
+import sys
+
+# Đảm bảo in được emoji trên Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
 
 def demo_secure_hash():
     password = "password123"

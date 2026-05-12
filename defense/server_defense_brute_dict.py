@@ -2,8 +2,13 @@ import time
 from flask import request
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'servers')))
-import server
+
+# Đảm bảo in được emoji trên Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from servers import server
 
 # Cấu hình phòng thủ
 failed_attempts = {}
