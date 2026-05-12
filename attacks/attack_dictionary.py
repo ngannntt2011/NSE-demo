@@ -46,7 +46,7 @@ def main():
         time.sleep(0.05) # Thời gian thử như phiên bản cũ
 
         try:
-            response = requests.post(url, data={"username": username, "password": password}, timeout=3)
+            response = requests.post(url, data={"username": username, "password": password}, timeout=5)
         except:
             pbar.close()
             print("\n [!] Error: Server is not running.")
